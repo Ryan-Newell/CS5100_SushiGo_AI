@@ -1,3 +1,10 @@
+# Group Project for Northeastern CS5100
+
+- Original Sushi Go code from https://github.com/Gravellent/sushigo-rl
+- game.py runs games. Currently, change players in code p1 and p2.
+- DeepPlayer, HumanPlayer, QPlayer, RandomPlayer and RulePlayer are all from Martin Liu.
+
+
 # SushiGo RL 
 
 - State.py handles the logic of the game  
