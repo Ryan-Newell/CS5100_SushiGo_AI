@@ -1,6 +1,7 @@
 from utils import *
 from Player.BasePlayer import BasePlayer
 
+
 class HumanPlayer(BasePlayer):
 
     def __init__(self, name):
@@ -12,6 +13,12 @@ class HumanPlayer(BasePlayer):
 
     def pick_a_card(self, all_player_boards):
         action = None
+        print("Opponent's Board")
+        print(all_player_boards)
+        # print(CARD_ON_BOARD)
+        for i in range(len(all_player_boards[0][1])):
+            print(f"{CARD_ON_BOARD[i]} X {all_player_boards[0][1][i]}")
+        print('-' * 50)
         print("Board:")
         for i in range(len(self.board)):
             print(f"{CARD_ON_BOARD[i]} X {self.board[i]}")
