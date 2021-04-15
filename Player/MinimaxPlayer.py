@@ -24,21 +24,23 @@ class MinimaxPlayer(BasePlayer):
                     add_a_card_to_board(self.board, card)
                     return
         else:
-            print(all_player_boards)
+            # print(all_player_boards)
             # print(self.opponentHand)
             # print(self.hand)
             # print(self.board)
             player_board = self.board.copy()
             opponent_board = all_player_boards[0][1].copy()
-            print(self.state_finder(self.hand.copy(), self.opponentHand.copy(),
-                                    self.board.copy(), opponent_board.copy()))
-            action = None
-            while True:
-                action = int(input("Please choose a card"))
-                if action in self.hand:
-                    break
-                else:
-                    print("Invalid choice!")
+            action, reward = self.state_finder(self.hand.copy(), self.opponentHand.copy(),
+                                    self.board.copy(), opponent_board.copy())
+            print(self.hand)
+            print(action)
+            # action = None
+            # while True:
+            #     action = int(input("Please choose a card"))
+            #     if action in self.hand:
+            #         break
+            #     else:
+            #         print("Invalid choice!")
             self.hand.remove(action)
             add_a_card_to_board(self.board, action)
 
@@ -50,14 +52,20 @@ class MinimaxPlayer(BasePlayer):
 
     def state_finder(self, player_hand, opponent_hand, player_board, opponent_board):
         # print(player_hand)
-        if len(player_hand) == 0:
-            print("endstate")
+        if len(player_hand) <= 1:
+            action = None
+            # print("endstate")
             # print(player_board)
             # print(get_score(player_board))
             # print(opponent_board)
             # print(get_score(opponent_board))
-            print(get_score(player_board) - get_score(opponent_board))
-            return get_score(player_board) - get_score(opponent_board)
+            if len(player_hand) == 1:
+                action = player_hand[0]
+                add_a_card_to_board(player_board, player_hand[0])
+            if len(opponent_hand) == 1:
+                add_a_card_to_board(opponent_board, opponent_hand[0])
+            # print(get_score(player_board) - get_score(opponent_board))
+            return action, get_score(player_board) - get_score(opponent_board)
         unique_player_hand = list(set(player_hand))
         unique_opponent_hand = list(set(opponent_hand))
         actions = []
@@ -65,7 +73,8 @@ class MinimaxPlayer(BasePlayer):
 
         for player_card in unique_player_hand:
             add_a_card_to_board(player_board, player_card)
-
+            actions.append(player_card)
+            minimizer = []
             for opponent_card in unique_opponent_hand:
                 add_a_card_to_board(opponent_board, opponent_card)
                 # actions.append(player_card)
@@ -73,13 +82,17 @@ class MinimaxPlayer(BasePlayer):
                 iter_opponent_hand = opponent_hand.copy()
                 iter_player_hand.remove(player_card)
                 iter_opponent_hand.remove(opponent_card)
-                rewards.append(self.state_finder(iter_opponent_hand.copy(), iter_player_hand.copy(), player_board.copy(), opponent_board.copy()))
-                print(rewards)
-        print(player_hand)
+                action, reward = self.state_finder(iter_opponent_hand.copy(), iter_player_hand.copy(), player_board.copy(), opponent_board.copy())
+                minimizer.append(reward)
+            # print("minimizing: " + str(minimizer))
+            rewards.append(min(minimizer))
+        # print(player_hand)
         # print(opponent_hand)
-        print(rewards)
+        # print("result")
+        # print(actions)
+        # print(rewards)
         max_index = rewards.index(max(rewards))
-        return rewards[max_index]
+        return actions[max_index], rewards[max_index]
 
     def minimax_recursor(self, ):
         pass
