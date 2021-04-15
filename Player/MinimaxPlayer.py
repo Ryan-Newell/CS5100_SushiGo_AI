@@ -16,7 +16,6 @@ class MinimaxPlayer(BasePlayer):
 
     def pick_a_card(self, all_player_boards):
         if len(self.hand) == 10:
-
             for card in self.priority:  # Choose based on priority
                 if card in self.hand:
                     self.hand.remove(card)
@@ -31,7 +30,8 @@ class MinimaxPlayer(BasePlayer):
             # print(self.board)
             player_board = self.board.copy()
             opponent_board = all_player_boards[0][1].copy()
-            print(self.state_finder(self.hand, self.opponentHand, self.board, opponent_board))
+            print(self.state_finder(self.hand.copy(), self.opponentHand.copy(),
+                                    self.board.copy(), opponent_board.copy()))
             action = None
             while True:
                 action = int(input("Please choose a card"))
@@ -49,27 +49,48 @@ class MinimaxPlayer(BasePlayer):
         return
 
     def state_finder(self, player_hand, opponent_hand, player_board, opponent_board):
+        # print(player_hand)
         if len(player_hand) == 0:
             print("endstate")
-            print(player_board)
-            print(get_score(player_board))
-            print(opponent_board)
-            print(get_score(opponent_board))
+            # print(player_board)
+            # print(get_score(player_board))
+            # print(opponent_board)
+            # print(get_score(opponent_board))
+            print(get_score(player_board) - get_score(opponent_board))
             return get_score(player_board) - get_score(opponent_board)
         unique_player_hand = list(set(player_hand))
         unique_opponent_hand = list(set(opponent_hand))
+        actions = []
+        rewards = []
+        iter_player_hand = player_hand.copy()
         for player_card in unique_player_hand:
-            player_hand.remove(player_card)
+            # print(player_card)
+            # print(len(player_hand))
+            iter_player_hand.remove(player_card)
             add_a_card_to_board(player_board, player_card)
+            iter_opponent_hand = opponent_hand.copy()
             for opponent_card in unique_opponent_hand:
-                opponent_hand.remove(opponent_card)
+                # print(opponent_card)
+                # print(opponent_hand)
+                iter_opponent_hand.remove(opponent_card)
+                # print(opponent_card)
                 add_a_card_to_board(opponent_board, opponent_card)
                 # print(player_card)
                 # print(player_board)
                 # print(opponent_card)
                 # print(opponent_board)
-                return self.state_finder(opponent_hand, player_hand, player_board, opponent_board)
-        #return
+                actions.append(player_card)
+                rewards.append(self.state_finder(iter_opponent_hand.copy(), iter_player_hand.copy(), player_board.copy(), opponent_board.copy()))
+                iter_opponent_hand.append(opponent_card)
+                print(rewards)
+        # print(player_hand)
+        # print(opponent_hand)
+        print(rewards)
+        max_index = rewards.index(max(rewards))
+        return rewards[max_index]
+
+    def minimax_recursor(self, ):
+        pass
 
     @staticmethod
     def win_check(player_board, opponent_board):
