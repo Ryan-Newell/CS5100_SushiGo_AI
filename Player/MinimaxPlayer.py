@@ -15,7 +15,7 @@ class MinimaxPlayer(BasePlayer):
         self.hand.append(card)
 
     def pick_a_card(self, all_player_boards):
-        if len(self.hand) == 10:
+        if len(self.hand) > 5:
             for card in self.priority:  # Choose based on priority
                 if card in self.hand:
                     self.hand.remove(card)
@@ -62,28 +62,20 @@ class MinimaxPlayer(BasePlayer):
         unique_opponent_hand = list(set(opponent_hand))
         actions = []
         rewards = []
-        iter_player_hand = player_hand.copy()
+
         for player_card in unique_player_hand:
-            # print(player_card)
-            # print(len(player_hand))
-            iter_player_hand.remove(player_card)
             add_a_card_to_board(player_board, player_card)
-            iter_opponent_hand = opponent_hand.copy()
+
             for opponent_card in unique_opponent_hand:
-                # print(opponent_card)
-                # print(opponent_hand)
-                iter_opponent_hand.remove(opponent_card)
-                # print(opponent_card)
                 add_a_card_to_board(opponent_board, opponent_card)
-                # print(player_card)
-                # print(player_board)
-                # print(opponent_card)
-                # print(opponent_board)
-                actions.append(player_card)
+                # actions.append(player_card)
+                iter_player_hand = player_hand.copy()
+                iter_opponent_hand = opponent_hand.copy()
+                iter_player_hand.remove(player_card)
+                iter_opponent_hand.remove(opponent_card)
                 rewards.append(self.state_finder(iter_opponent_hand.copy(), iter_player_hand.copy(), player_board.copy(), opponent_board.copy()))
-                iter_opponent_hand.append(opponent_card)
                 print(rewards)
-        # print(player_hand)
+        print(player_hand)
         # print(opponent_hand)
         print(rewards)
         max_index = rewards.index(max(rewards))
