@@ -120,6 +120,23 @@ def get_pudding_score(pudding_cnt_list):
             pudding_score.append(0)
     return pudding_score
 
+def score_game(boards):
+    scores = []
+    makis = []
+    puddings = []
+    for board in boards:
+        scores.append(get_score(board))
+        makis.append(board[10])
+        puddings.append(board[11])
+    maki_scores = get_maki_score(makis)
+    pudding_scores = get_pudding_score(puddings)
+    for i in range(0,len(scores)):
+        scores[i] += maki_scores[i] + pudding_scores[i]
+    return scores
+
+
+
+
 def translate_board(board):
     board_list = ast.literal_eval(board)
     res = []
