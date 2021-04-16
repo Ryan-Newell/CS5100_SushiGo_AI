@@ -15,7 +15,7 @@ class MinimaxPlayer(BasePlayer):
         self.hand.append(card)
 
     def pick_a_card(self, all_player_boards):
-        if len(self.hand) > 3:
+        if len(self.hand) > 5:
             for card in self.priority:  # Choose based on priority
                 if card in self.hand:
                     self.hand.remove(card)
@@ -66,20 +66,20 @@ class MinimaxPlayer(BasePlayer):
             print(opponent_board)
             print(player_board)
             scores = score_game([opponent_board, player_board])
-            print(scores[0])
-            print(scores[1])
+            print(scores)
+            # print(scores[1])
             return action, scores[1]-scores[0]
             # -1/+1 attempt
             # print("leaf")
             # print("[" + str(get_score(opponent_board)) + ", " + str(get_score(player_board)) + "]")
 
-            # if get_score(player_board) > get_score(opponent_board):
-            #     print("win!")
-            #     print(player_board)
-            #     print(opponent_board)
-            #     print("[" + str(get_score(opponent_board)) + ", " + str(get_score(player_board)) + "]")
+            # if scores[1] > scores[0]:
+            #     # print("win!")
+            #     # print(player_board)
+            #     # print(opponent_board)
+            #     # print("[" + str(get_score(opponent_board)) + ", " + str(get_score(player_board)) + "]")
             #     return action, 1
-            # elif get_score(player_board) == get_score(opponent_board):
+            # elif scores[1] == scores[0]:
             #     return action, 0
             # else:
             #     return action, -1

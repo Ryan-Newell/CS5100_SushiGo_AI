@@ -52,11 +52,13 @@ class State:
 
         max_score = max(self.scoreboard)
         if output_result:
-            for i, p in enumerate(self.players):
-                print("Player", i)
-                for i in range(len(p.board)):
-                    print(f"{CARD_ON_BOARD[i]} X {p.board[i]}")
+            # for i, p in enumerate(self.players):
+            #     print("Player", i)
+            #     for i in range(len(p.board)):
+            #         print(f"{CARD_ON_BOARD[i]} X {p.board[i]}")
             print(self.scoreboard, max_score)
+            if self.scoreboard[1] > self.scoreboard[0]:
+                print("WIN")
 
         for i, p in enumerate(self.players):
             if self.scoreboard[i] == max_score:

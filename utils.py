@@ -105,6 +105,7 @@ def get_maki_score(maki_cnt_list):
             maki_score.append(0)
     return maki_score
 
+
 def get_pudding_score(pudding_cnt_list):
     pudding_rank = rankdata([_*-1 for _ in pudding_cnt_list], method='min')
     pudding_score = []
@@ -120,7 +121,13 @@ def get_pudding_score(pudding_cnt_list):
             pudding_score.append(0)
     return pudding_score
 
+
+
 def score_game(boards):
+    """
+    :param boards: array of boards in the game [board1, board2]
+    :return: array of scores. [score1, score2]
+    """
     scores = []
     makis = []
     puddings = []
@@ -130,7 +137,7 @@ def score_game(boards):
         puddings.append(board[11])
     maki_scores = get_maki_score(makis)
     pudding_scores = get_pudding_score(puddings)
-    for i in range(0,len(scores)):
+    for i in range(0, len(scores)):
         scores[i] += maki_scores[i] + pudding_scores[i]
     return scores
 
