@@ -16,8 +16,11 @@ class MinimaxPlayer(BasePlayer):
         self.hand.append(card)
 
     def pick_a_card(self, all_player_boards):
+        # print(all_player_boards)
+        # print(self.hand)
+        # print(self.opponentHand)
 
-        if len(self.hand) > 3:
+        if len(self.hand) > 4:
             self.rewards = []
             for card in self.priority:  # Choose based on priority
                 if card in self.hand:
@@ -41,11 +44,11 @@ class MinimaxPlayer(BasePlayer):
             # print("SET")
 
             player_board = self.board.copy()
-            opponent_board = all_player_boards[0][1].copy()
+            opponent_board = all_player_boards[1][1].copy()
             action, reward, choices = self.state_finder(self.hand.copy(), self.opponentHand.copy(),
                                     self.board.copy(), opponent_board.copy(), -1000, 1000)
-            # print(len(self.hand))
-            # print(self.hand)
+            # print("handsize: " + str(len(self.hand)))
+
             # print(self.board)
             # print(choices[0])
             # print(choices[1])
@@ -61,15 +64,17 @@ class MinimaxPlayer(BasePlayer):
             #     else:
             #         print("Invalid choice!")
             self.hand.remove(action)
+            self.opponentHand = self.hand.copy()
             add_a_card_to_board(self.board, action)
         if len(self.hand) == 0:
             print(self.rewards)
-            prev = -1000
+            winnable = False
             for reward in self.rewards:
-                if prev > reward:
-                    print("ALERT")
-                    break
-                prev = reward
+                if reward > 0:
+                    winnable = True
+            if winnable and self.rewards[-1] <= 0:
+                print("ALERT")
+            #     prev = reward
         return
 
     def get_score(self):
@@ -116,6 +121,7 @@ class MinimaxPlayer(BasePlayer):
         for player_card in unique_player_hand:
             add_a_card_to_board(player_board, player_card)
             actions.append(player_card)
+            minacs = []
             minimizer = []
             # minimizer = 0
             iter_player_hand = player_hand.copy()
@@ -125,26 +131,24 @@ class MinimaxPlayer(BasePlayer):
                 # actions.append(player_card)
 
                 iter_opponent_hand = opponent_hand.copy()
-
                 iter_opponent_hand.remove(opponent_card)
+
                 action, reward, choices = self.state_finder(iter_opponent_hand.copy(), iter_player_hand.copy(),
                                                             player_board.copy(), opponent_board.copy(), alpha, beta)
 
+                minacs.append(action)
                 minimizer.append(reward)
                 beta = min(min(minimizer), beta)
                 # alpha =
                 if reward < alpha:
-                    # print("Alphabreak")
-                    # print(reward)
-                    # beta = reward
+                    beta = reward
                     break
                 # minimizer += reward
             # print("minimizing: " + str(minimizer))
+            # print("minacs: " + str(minacs))
             rewards.append(min(minimizer))
             alpha = max(max(rewards), alpha)
             if max(rewards) > beta:
-                # print("Betabreak")
-                # print(max(rewards))
                 break
         # print("hands")
         # print(player_hand)

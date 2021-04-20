@@ -71,8 +71,8 @@ def add_a_card_to_board(board, card):
     if card in [1, 2, 3]:
         if board[7] > 0:
             wasabi_cnt = board[7]
-            board[7] = 0
-            board[card + 3] += wasabi_cnt  # For each wasabi, add a wasabi combo (combo is always +3 index)
+            board[7] = board[7] - 1
+            board[card + 3] += 1  # For each wasabi, add a wasabi combo (combo is always +3 index)
         else:
             board[card] += 1
     if card == 4:
