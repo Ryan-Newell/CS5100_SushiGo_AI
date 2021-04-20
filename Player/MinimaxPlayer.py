@@ -20,7 +20,7 @@ class MinimaxPlayer(BasePlayer):
         # print(self.hand)
         # print(self.opponentHand)
 
-        if len(self.hand) > 4:
+        if len(self.hand) > 5:
             self.rewards = []
             for card in self.priority:  # Choose based on priority
                 if card in self.hand:
