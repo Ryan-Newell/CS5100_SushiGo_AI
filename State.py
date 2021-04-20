@@ -57,11 +57,13 @@ class State:
             #     for i in range(len(p.board)):
             #         print(f"{CARD_ON_BOARD[i]} X {p.board[i]}")
             print(self.scoreboard, max_score)
-            if self.scoreboard[1] > self.scoreboard[0]:
-                print("WIN")
+            # print(self.players)
+            # if self.scoreboard[1] > self.scoreboard[0]:
+            #     print("WIN")
 
         for i, p in enumerate(self.players):
             if self.scoreboard[i] == max_score:
+                # print(max_score)
                 self.stats[i] += 1
                 p.feed_reward(max(1, len(self.players) - 1))  # If there are more than one opponent, put more reward for a win
             else:
@@ -72,7 +74,7 @@ class State:
         for i in range(num_of_games):
             self.refresh_state()
             self.play(output_result=output_result, num_of_rounds=round_per_game)
-        # print(self.stats)
+        print(self.stats)
 
     def pass_around(self):
         tmp = self.players[-1].hand
