@@ -17,8 +17,18 @@ class EvaluationFunction:
 
         score = 0
 
-        cards_in_game = np.add(np.array(player_hand), np.array(opponent_hand))
+        # cards_in_game = np.append(np.array(player_hand), np.array(opponent_hand))
+        cards_in_game = []
+        # print("cards")
+        print(player_hand)
+        # print(opponent_hand)
+        # if len(player_hand) != len(opponent_hand):
+        #     print("alert")
+        for i in range(len(player_hand)):
+            # print(i)
+            cards_in_game.append(player_hand[i] + opponent_hand[i])
 
+        # print(cards_in_game)
         if card_number == 0:  # sashimi
             sashimi_with_player = player_board[0]
             sashimi_in_game = cards_in_game[0]
@@ -52,6 +62,8 @@ class EvaluationFunction:
 
         if card_number == 5:  # tempura
             tempura_with_player = player_board[8]
+            if 5 in cards_in_game:
+                print("tempura exists")
             tempura_in_game = cards_in_game[5]
             if tempura_with_player + tempura_in_game > 2:
                 possible_future_deck = player_board.copy()
@@ -77,6 +89,7 @@ class EvaluationFunction:
             return self.get_actual_card_score(card_number, player_board)
         if card_number == 9:  # 3 maki
             return self.get_actual_card_score(card_number, player_board)
+        return 0
 
     def get_actual_card_score(self, card_number, player_board):
         if card_number == 0:  # sashimi
@@ -127,6 +140,7 @@ class EvaluationFunction:
             return 0
         if card_number == 11:  # chopsticks
             return 0
+        return 0
 
     def get_state_score(self):
         pass

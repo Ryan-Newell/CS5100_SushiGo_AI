@@ -1,5 +1,6 @@
 from utils import *
 from Player.BasePlayer import BasePlayer
+from EvaluationFunction import EvaluationFunction
 
 
 class MinimaxPlayer(BasePlayer):
@@ -7,7 +8,7 @@ class MinimaxPlayer(BasePlayer):
     def __init__(self, name):
         super().__init__(name)
         self.prepare_for_next_round()
-
+        self.evaluate = EvaluationFunction()
         self.priority = [4, 3, 2, 0, 10, 5, 9, 8, 7, 6, 1]
         self.opponentHand = []
         self.rewards = []
@@ -20,7 +21,7 @@ class MinimaxPlayer(BasePlayer):
         # print(self.hand)
         # print(self.opponentHand)
 
-        if len(self.hand) > 5:
+        if len(self.hand) > 9:
             self.rewards = []
             for card in self.priority:  # Choose based on priority
                 if card in self.hand:
@@ -85,6 +86,29 @@ class MinimaxPlayer(BasePlayer):
 
     def state_finder(self, player_hand, opponent_hand, player_board, opponent_board, alpha, beta):
         # print(player_hand)
+        depth = 0
+        limit = 0
+        unique_player_hand = list(set(player_hand))
+        unique_opponent_hand = list(set(opponent_hand))
+        if depth == limit:
+            scores = []
+            card_list = []
+            opponent_scores = []
+            for player_card in unique_player_hand:
+                print(player_hand)
+                print(player_card)
+                print(player_board)
+                scores.append(
+                    self.evaluate.get_card_score_estimate(player_card, player_hand, opponent_hand, player_board))
+                card_list.append(player_card)
+            # for opponent_card in unique_opponent_hand:
+            #     opponent_scores.append(
+            #         self.evaluate.get_card_score_estimate(opponent_card, opponent_hand, player_hand, player_board))
+            print("Score")
+            print(scores)
+            minimax_card = card_list[scores.index(max(scores))]
+            minimax_score = max(scores) #  - min(opponent_scores)
+            return minimax_card, minimax_score, (0, 0)
         if len(player_hand) <= 1:
             action = None
             if len(player_hand) == 1:
@@ -113,8 +137,7 @@ class MinimaxPlayer(BasePlayer):
             #     return action, 0
             # else:
             #     return action, -1
-        unique_player_hand = list(set(player_hand))
-        unique_opponent_hand = list(set(opponent_hand))
+
         actions = []
         rewards = []
 

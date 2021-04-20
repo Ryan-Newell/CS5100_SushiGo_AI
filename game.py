@@ -24,4 +24,4 @@ df = pd.DataFrame()
 all_results = []
 hit_rates = []
 
-state.play_games(1000, output_result=True)
+state.play_games(1, output_result=True)
