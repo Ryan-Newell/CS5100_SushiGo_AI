@@ -17,21 +17,13 @@ class EvaluationFunction:
 
         score = 0
 
-        # cards_in_game = np.append(np.array(player_hand), np.array(opponent_hand))
-        cards_in_game = []
-        # print("cards")
-        print(player_hand)
-        # print(opponent_hand)
-        # if len(player_hand) != len(opponent_hand):
-        #     print("alert")
-        for i in range(len(player_hand)):
-            # print(i)
-            cards_in_game.append(player_hand[i] + opponent_hand[i])
 
-        # print(cards_in_game)
+        # cards_in_game = np.add(np.array(player_hand), np.array(opponent_hand))
+        cards_in_game = player_hand + opponent_hand
+
         if card_number == 0:  # sashimi
             sashimi_with_player = player_board[0]
-            sashimi_in_game = cards_in_game[0]
+            sashimi_in_game = cards_in_game.count(0)
             if sashimi_with_player + sashimi_in_game > 4:
                 possible_future_deck = player_board.copy()
                 possible_future_deck[0] += 1
@@ -56,15 +48,14 @@ class EvaluationFunction:
                 return 3
 
         if card_number == 4:  # wasabi
-            nigiri_in_game = cards_in_game[1] + cards_in_game[2] + cards_in_game[3]
+            nigiri_in_game = cards_in_game.count(1) + cards_in_game.count(2) + cards_in_game.count(3)
             wasabi_with_player = player_board[7]
             return nigiri_in_game - wasabi_with_player  # wasabi is scored only if there are nigiri cards in the game
 
         if card_number == 5:  # tempura
             tempura_with_player = player_board[8]
-            if 5 in cards_in_game:
-                print("tempura exists")
-            tempura_in_game = cards_in_game[5]
+
+            tempura_in_game = cards_in_game.count(5)
             if tempura_with_player + tempura_in_game > 2:
                 possible_future_deck = player_board.copy()
                 possible_future_deck[8] += 1
@@ -74,7 +65,7 @@ class EvaluationFunction:
                 return 0
         if card_number == 6:  # dumplings
             dumplings_with_player = player_board[9]
-            dumplings_in_game = cards_in_game[6]
+            dumplings_in_game = cards_in_game.count(6)
             if dumplings_in_game > 0:
                 future_deck = player_board.copy()
                 future_deck[9] += 1
