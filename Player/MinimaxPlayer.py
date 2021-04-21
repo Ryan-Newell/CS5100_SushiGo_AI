@@ -9,10 +9,13 @@ class MinimaxPlayer(BasePlayer):
         super().__init__(name)
         self.prepare_for_next_round()
         self.evaluate = EvaluationFunction()
-        self.priority = [4, 3, 2, 0, 10, 5, 9, 8, 7, 6, 1]
+        # Greedy+
+        self.priority = [4, 3, 10, 2, 5, 9, 8, 6, 0, 7, 1]
+        # Greedy
+        # self.priority = [4, 3, 2, 0, 10, 5, 9, 8, 7, 6, 1]
         self.opponentHand = []
         self.rewards = []
-        self.max_depth = 1
+        self.max_depth = 3
 
     def draw(self, card):
         self.hand.append(card)
@@ -22,7 +25,7 @@ class MinimaxPlayer(BasePlayer):
         # print(self.hand)
         # print(self.opponentHand)
 
-        if len(self.hand) > 9:
+        if len(self.hand) > 5:
             self.rewards = []
             for card in self.priority:  # Choose based on priority
                 if card in self.hand:
@@ -47,14 +50,15 @@ class MinimaxPlayer(BasePlayer):
 
             player_board = self.board.copy()
             opponent_board = all_player_boards[1][1].copy()
-            if len(self.hand) > 5:
-                action, reward, choices = self.state_finder(self.hand.copy(), self.opponentHand.copy(),
-                                    self.board.copy(), opponent_board.copy(), -1000, 1000, 0)
-            else:
-                action, reward, choices = self.state_finder(self.hand.copy(), self.opponentHand.copy(),
-                                    self.board.copy(), opponent_board.copy(), -1000, 1000, -5)
+            # if len(self.hand) > 5:
+            #     action, reward, choices = self.state_finder(self.hand.copy(), self.opponentHand.copy(),
+            #                         self.board.copy(), opponent_board.copy(), -1000, 1000, 0)
+            # else:
+            #     action, reward, choices = self.state_finder(self.hand.copy(), self.opponentHand.copy(),
+            #                         self.board.copy(), opponent_board.copy(), -1000, 1000, -5)
             # print("handsize: " + str(len(self.hand)))
-
+            action, reward, choices = self.state_finder(self.hand.copy(), self.opponentHand.copy(),
+                                                        self.board.copy(), opponent_board.copy(), -1000, 1000, -50)
             # print(self.board)
             # print(choices[0])
             # print(choices[1])
