@@ -21,9 +21,9 @@ class RulePlayer(BasePlayer):
     def pick_a_card(self, all_player_boards):
         for card in self.priority:  # Choose based on priority
             if card in self.hand:
-                print("opponent")
-                print(self.hand)
-                print(card)
+                # print("opponent")
+                # print(self.hand)
+                # print(card)
                 self.hand.remove(card)
                 add_a_card_to_board(self.board, card)
                 return

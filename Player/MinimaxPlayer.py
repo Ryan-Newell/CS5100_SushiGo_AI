@@ -67,15 +67,15 @@ class MinimaxPlayer(BasePlayer):
             else:
                 action, reward, choices = self.state_finder(self.hand.copy(), self.opponentHand.copy(),
                                                             self.board.copy(), opponent_board.copy(), -1000, 1000, -50)
-            print("handsize " + str(len(self.hand)))
-            print(self.hand)
-            # print(self.board)
-            print(choices[0])
-            print(choices[1])
-            print(choices[2])
-
-            print(action)
-            print(reward)
+            # print("handsize " + str(len(self.hand)))
+            # print(self.hand)
+            # # print(self.board)
+            # print(choices[0])
+            # print(choices[1])
+            # print(choices[2])
+            #
+            # print(action)
+            # print(reward)
             self.rewards.append(reward)
             # print(reward)
             # action = None
@@ -88,19 +88,19 @@ class MinimaxPlayer(BasePlayer):
             self.hand.remove(action)
             self.opponentHand = self.hand.copy()
             add_a_card_to_board(self.board, action)
-        if len(self.hand) == 0:
-            print(self.rewards)
-            winnable = False
-            prev = -1000
-            for reward in self.rewards:
-                if reward > 0:
-                    winnable = True
-
-                if reward < prev:
-                    print("miss estimate")
-                prev = reward
-            if winnable and self.rewards[-1] <= 0:
-                print("ALERT")
+        # if len(self.hand) == 0:
+        #     print(self.rewards)
+        #     winnable = False
+        #     prev = -1000
+        #     for reward in self.rewards:
+        #         if reward > 0:
+        #             winnable = True
+        #
+        #         if reward < prev:
+        #             print("miss estimate")
+        #         prev = reward
+        #     if winnable and self.rewards[-1] <= 0:
+        #         print("ALERT")
             #     prev = reward
         return
 
@@ -111,10 +111,10 @@ class MinimaxPlayer(BasePlayer):
         return
 
     def state_finder(self, player_hand, opponent_hand, player_board, opponent_board, alpha, beta, depth):
-        # unique_player_hand = list(set(player_hand))
-        # unique_opponent_hand = list(set(opponent_hand))
-        unique_player_hand = player_hand.copy()
-        unique_opponent_hand = opponent_hand.copy()
+        unique_player_hand = list(set(player_hand))
+        unique_opponent_hand = list(set(opponent_hand))
+        # unique_player_hand = player_hand.copy()
+        # unique_opponent_hand = opponent_hand.copy()
         if len(player_hand) <= 1:
             action = None
             if len(player_hand) == 1:
