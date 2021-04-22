@@ -13,7 +13,7 @@ import json
 
 state = State(get_actual_card_pool())
 
-p1 = RulePlayer('Player 1')
+p1 = RulePlayer('Player 1', 'plus')
 # p1.model_dict = json.loads(open('./models/model1.json').read())
 # p2 = RandomPlayer('Player 2')
 # p1 = MinimaxPlayer.MinimaxPlayer('Player 1')
