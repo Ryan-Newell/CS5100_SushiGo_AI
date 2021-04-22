@@ -138,7 +138,8 @@ class MinimaxPlayer(BasePlayer):
                 # print(player_card)
                 # print(player_board)
                 scores.append(
-                    self.evaluate.get_card_score_estimate(player_card, player_hand, opponent_hand, player_board))
+                    self.evaluate.get_card_score_estimate(player_card, player_hand, opponent_hand,
+                                                          player_board, opponent_board))
                 card_list.append(player_card)
             # for opponent_card in unique_opponent_hand:
             #     opponent_scores.append(

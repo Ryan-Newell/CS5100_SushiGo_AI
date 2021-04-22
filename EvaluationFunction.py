@@ -6,7 +6,7 @@ class EvaluationFunction:
     def __init__(self):
         pass
 
-    def get_card_score_estimate(self, card_number, player_hand, opponent_hand, player_board):  # opponents board
+    def get_card_score_estimate(self, card_number, player_hand, opponent_hand, player_board, opponent_board):
         """
                 player_hand : Cards currently in players hand
                 opponent_hand : Cards currently in opponents hand
@@ -16,7 +16,6 @@ class EvaluationFunction:
         """
 
         score = 0
-
 
         # cards_in_game = np.add(np.array(player_hand), np.array(opponent_hand))
         cards_in_game = player_hand + opponent_hand
@@ -74,12 +73,35 @@ class EvaluationFunction:
                                                   player_board)  # we just want to add the resultant increase in score
             else:
                 return 0
-        if card_number == 7:  # 1 maki
-            return self.get_actual_card_score(card_number, player_board)
-        if card_number == 8:  # 2 maki
-            return self.get_actual_card_score(card_number, player_board)
-        if card_number == 9:  # 3 maki
-            return self.get_actual_card_score(card_number, player_board)
+        # if card_number == 7:  # 1 maki
+        #     return self.get_actual_card_score(card_number, player_board)
+        # if card_number == 8:  # 2 maki
+        #     return self.get_actual_card_score(card_number, player_board)
+        # if card_number == 9:  # 3 maki
+        #     return self.get_actual_card_score(card_number, player_board)
+
+        # Maki
+        if card_number in [7, 8, 9]:
+            maki_rolls = card_number - 6
+            rolls_in_game = cards_in_game.count(7) + 2 * cards_in_game.count(8) + 3 * cards_in_game.count(9)
+            # maki is not useful if one player is guaranteed to have the most
+            if opponent_board[10] > player_board[10] + rolls_in_game \
+                    or player_board[10] > opponent_board[10] + rolls_in_game:
+                return 0
+            # prioritize if current maki guarantees a win
+            if player_board[10] + maki_rolls > opponent_board[10] + rolls_in_game - maki_rolls:
+                # print("decider")
+                return 3
+            else:
+                return 1
+
+        if card_number == 0: # pudding
+            # pudding is not useful if one player is guaranteed to have the most
+            if opponent_board[11] > player_board[11] + cards_in_game.count[10] \
+                    or player_board[11] > opponent_board[11] + cards_in_game.count[10]:
+                return 0
+            # 12 is the point swing for winning puddings
+            return 12
         return 0
 
     def get_actual_card_score(self, card_number, player_board):
