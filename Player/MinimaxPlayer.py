@@ -5,17 +5,25 @@ from EvaluationFunction import EvaluationFunction
 
 class MinimaxPlayer(BasePlayer):
 
-    def __init__(self, name):
+    def __init__(self, name, eval = True, roundstart = 'plus'):
         super().__init__(name)
         self.prepare_for_next_round()
         self.evaluate = EvaluationFunction()
-        # Greedy+
-        self.priority = [4, 3, 10, 2, 5, 9, 8, 6, 0, 7, 1]
-        # Greedy
-        # self.priority = [4, 3, 2, 0, 10, 5, 9, 8, 7, 6, 1]
+
+        if roundstart == 'plus':
+            # Greedy+
+            self.priority = [4, 3, 10, 2, 5, 9, 8, 6, 0, 7, 1]
+        else:
+            # Greedy
+            self.priority = [4, 3, 2, 0, 10, 5, 9, 8, 7, 6, 1]
         self.opponentHand = []
         self.rewards = []
         self.max_depth = 3
+        self.eval = eval
+        if eval:
+            self.greedy_num = 9
+        else:
+            self.greedy_num = 5
 
     def draw(self, card):
         self.hand.append(card)
@@ -24,8 +32,7 @@ class MinimaxPlayer(BasePlayer):
         # print(all_player_boards)
         # print(self.hand)
         # print(self.opponentHand)
-
-        if len(self.hand) > 5:
+        if len(self.hand) > self.greedy_num:
             self.rewards = []
             for card in self.priority:  # Choose based on priority
                 if card in self.hand:
@@ -50,18 +57,19 @@ class MinimaxPlayer(BasePlayer):
 
             player_board = self.board.copy()
             opponent_board = all_player_boards[1][1].copy()
-            # if len(self.hand) > 5:
-            #     action, reward, choices = self.state_finder(self.hand.copy(), self.opponentHand.copy(),
-            #                         self.board.copy(), opponent_board.copy(), -1000, 1000, 0)
-            # else:
-            #     action, reward, choices = self.state_finder(self.hand.copy(), self.opponentHand.copy(),
-            #                         self.board.copy(), opponent_board.copy(), -1000, 1000, -5)
-            # print("handsize: " + str(len(self.hand)))
-            action, reward, choices = self.state_finder(self.hand.copy(), self.opponentHand.copy(),
-                                                        self.board.copy(), opponent_board.copy(), -1000, 1000, -50)
+            if self.eval:
+                if len(self.hand) > 5:
+                    action, reward, choices = self.state_finder(self.hand.copy(), self.opponentHand.copy(),
+                                        self.board.copy(), opponent_board.copy(), -1000, 1000, 0)
+                else:
+                    action, reward, choices = self.state_finder(self.hand.copy(), self.opponentHand.copy(),
+                                        self.board.copy(), opponent_board.copy(), -1000, 1000, -5)
+            else:
+                action, reward, choices = self.state_finder(self.hand.copy(), self.opponentHand.copy(),
+                                                            self.board.copy(), opponent_board.copy(), -1000, 1000, -50)
             # print(self.board)
-            # print(choices[0])
-            # print(choices[1])
+            print(choices[0])
+            print(choices[1])
             # print(action)
             # print(reward)
             self.rewards.append(reward)
@@ -76,14 +84,14 @@ class MinimaxPlayer(BasePlayer):
             self.hand.remove(action)
             self.opponentHand = self.hand.copy()
             add_a_card_to_board(self.board, action)
-        # if len(self.hand) == 0:
-        #     print(self.rewards)
-        #     winnable = False
-        #     for reward in self.rewards:
-        #         if reward > 0:
-        #             winnable = True
-        #     if winnable and self.rewards[-1] <= 0:
-        #         print("ALERT")
+        if len(self.hand) == 0:
+            print(self.rewards)
+            winnable = False
+            for reward in self.rewards:
+                if reward > 0:
+                    winnable = True
+            if winnable and self.rewards[-1] <= 0:
+                print("ALERT")
             #     prev = reward
         return
 
