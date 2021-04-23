@@ -5,7 +5,7 @@ from EvaluationFunction import EvaluationFunction
 
 class MinimaxPlayer(BasePlayer):
 
-    def __init__(self, name, eval = True, roundstart = 'plus'):
+    def __init__(self, name, evaluate=True, roundstart='plus'):
         super().__init__(name)
         self.prepare_for_next_round()
         self.evaluate = EvaluationFunction()
@@ -19,72 +19,49 @@ class MinimaxPlayer(BasePlayer):
         self.opponentHand = []
         self.rewards = []
         self.max_depth = 3
-        self.eval = eval
-        if eval:
+        self.eval = evaluate
+        self.solve_tree = 0
+        if evaluate:
             self.greedy_num = 9
+            self.solve_tree = 6
         else:
-            self.greedy_num = 5
+            self.greedy_num = 6
 
     def draw(self, card):
         self.hand.append(card)
 
     def pick_a_card(self, all_player_boards):
-        # print(all_player_boards)
-        # print(self.hand)
-        # print(self.opponentHand)
+        # First Play, and more if not using evaluation function
+        unique_hand = list(set(self.hand))
         if len(self.hand) > self.greedy_num:
             self.rewards = []
             for card in self.priority:  # Choose based on priority
-                if card in self.hand:
+                if card in unique_hand:
                     self.hand.remove(card)
-                    # print(self.hand)
                     self.opponentHand = self.hand.copy()
                     add_a_card_to_board(self.board, card)
                     return
-            # self.opponentHand = self.hand.copy()
-            # action = self.hand.pop()
-            # add_a_card_to_board(self.board, action)
-            # random.shuffle(self.hand)
-            # action = self.hand.pop()
-            # add_a_card_to_board(self.board, action)
-            return
         else:
-            # print(all_player_boards)
-            # print(self.opponentHand)
-            # print(self.hand)
-            # print(self.board)
-            # print("SET")
-
             player_board = self.board.copy()
             opponent_board = all_player_boards[1][1].copy()
             if self.eval:
-                if len(self.hand) > 5:
+                if len(self.hand) > self.solve_tree:
                     action, reward, choices = self.state_finder(self.hand.copy(), self.opponentHand.copy(),
                                         self.board.copy(), opponent_board.copy(), -1000, 1000, 0)
                 else:
                     action, reward, choices = self.state_finder(self.hand.copy(), self.opponentHand.copy(),
-                                        self.board.copy(), opponent_board.copy(), -1000, 1000, -5)
+                                        self.board.copy(), opponent_board.copy(), -1000, 1000, -50)
             else:
                 action, reward, choices = self.state_finder(self.hand.copy(), self.opponentHand.copy(),
-                                                            self.board.copy(), opponent_board.copy(), -1000, 1000, -50)
-            # print("handsize " + str(len(self.hand)))
+                                                            player_board.copy(), opponent_board.copy(), -1000, 1000, -50)
+
             # print(self.hand)
-            # # print(self.board)
             # print(choices[0])
             # print(choices[1])
             # print(choices[2])
-            #
             # print(action)
             # print(reward)
             self.rewards.append(reward)
-            # print(reward)
-            # action = None
-            # while True:
-            #     action = int(input("Please choose a card"))
-            #     if action in self.hand:
-            #         break
-            #     else:
-            #         print("Invalid choice!")
             self.hand.remove(action)
             self.opponentHand = self.hand.copy()
             add_a_card_to_board(self.board, action)
@@ -115,20 +92,26 @@ class MinimaxPlayer(BasePlayer):
         unique_opponent_hand = list(set(opponent_hand))
         # unique_player_hand = player_hand.copy()
         # unique_opponent_hand = opponent_hand.copy()
-        if len(player_hand) <= 1:
+
+        if len(player_hand) == 1 and len(opponent_hand) == 1:
+            # print(opponent_board)
+            # print(player_board)
+            temp_player_board = player_board.copy()
+            temp_opponent_board = opponent_board.copy()
             action = None
             if len(player_hand) == 1:
                 action = player_hand[0]
-                add_a_card_to_board(player_board, player_hand[0])
+                add_a_card_to_board(temp_player_board, player_hand[0])
             if len(opponent_hand) == 1:
-                add_a_card_to_board(opponent_board, opponent_hand[0])
+                add_a_card_to_board(temp_opponent_board, opponent_hand[0])
             # print(get_score(player_board) - get_score(opponent_board))
+
+            scores = score_game([temp_player_board, temp_opponent_board])
+            # print(scores)
             # print(opponent_board)
             # print(player_board)
-            scores = score_game([opponent_board, player_board])
-            # print(scores)
-            # print(scores[1])
-            return action, scores[1]-scores[0], (player_board, opponent_board, opponent_hand)
+            # print("[" + str(scores[0]) + ", " + str(scores[1]) + " total: " + str(scores[0] - scores[1]) + "]")
+            return action, scores[0]-scores[1], (player_board, opponent_board, opponent_hand)
         if depth == self.max_depth:
             scores = []
             card_list = []
@@ -171,45 +154,53 @@ class MinimaxPlayer(BasePlayer):
         opp_accs = []
 
         for player_card in unique_player_hand:
-            add_a_card_to_board(player_board, player_card)
+            temp_player_board = player_board.copy()
+            iter_player_hand = player_hand.copy()
+
+            add_a_card_to_board(temp_player_board, player_card)
+            iter_player_hand.remove(player_card)
             actions.append(player_card)
+
             minacs = []
             minimizer = []
             endstates = []
             # minimizer = 0
-            iter_player_hand = player_hand.copy()
-            iter_player_hand.remove(player_card)
+
             for opponent_card in unique_opponent_hand:
-                add_a_card_to_board(opponent_board, opponent_card)
+                temp_opponent_board = opponent_board.copy()
+                add_a_card_to_board(temp_opponent_board, opponent_card)
                 # actions.append(player_card)
 
                 iter_opponent_hand = opponent_hand.copy()
                 iter_opponent_hand.remove(opponent_card)
 
                 action, reward, endstate = self.state_finder(iter_opponent_hand.copy(), iter_player_hand.copy(),
-                                                            player_board.copy(), opponent_board.copy(),
+                                                            temp_player_board, temp_opponent_board,
                                                             alpha, beta, depth+1)
 
                 minacs.append(opponent_card)
                 minimizer.append(reward)
                 endstates.append(endstate)
+
+                # alpha pruning
                 beta = min(min(minimizer), beta)
-                # alpha =
-                # if reward < alpha:
-                #     beta = reward
-                #     break
+                if reward < alpha:
+                    beta = reward
+                    break
                 # minimizer += reward
             # print("minimizing: " + str(minimizer))
             # print("minacs: " + str(minacs))
             rewards.append(min(minimizer))
             reward_ends.append(endstates[minimizer.index(min(minimizer))])
             opp_accs.append((minacs, minimizer))
+            # beta pruning
             alpha = max(max(rewards), alpha)
-            # if max(rewards) > beta:
-            #     break
+            if max(rewards) > beta:
+                break
         # print("hands")
         # print(player_hand)
         # print(opponent_hand)
+        # print(opponent_board)
         # print("result")
         # print(actions)
         # print(rewards)
@@ -218,13 +209,3 @@ class MinimaxPlayer(BasePlayer):
         # print(rewards)
         # print(rewards[max_index])
         return actions[max_index], rewards[max_index], (actions, rewards, opp_accs)
-
-    def minimax_recursor(self, ):
-        pass
-
-    @staticmethod
-    def win_check(player_board, opponent_board):
-        if get_score(player_board) > get_score(opponent_board):
-            return True
-        else:
-            return False
