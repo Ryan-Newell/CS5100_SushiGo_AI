@@ -10,7 +10,7 @@ class RulePlayer(BasePlayer):
         self.prepare_for_next_round()
 
         if playstyle == 'plus':
-            self.priority = [4, 3, 10, 2, 5, 9, 8, 6, 0, 7, 1]
+            self.priority = [10, 4, 3, 2, 5, 9, 8, 6, 0, 7, 1]
         else:
             self.priority = [4, 3, 2, 0, 10, 5, 9, 8, 7, 6, 1]
 

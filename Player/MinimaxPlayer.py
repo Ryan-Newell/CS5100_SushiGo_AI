@@ -12,7 +12,7 @@ class MinimaxPlayer(BasePlayer):
 
         if roundstart == 'plus':
             # Greedy+
-            self.priority = [4, 3, 10, 2, 5, 9, 8, 6, 0, 7, 1]
+            self.priority = [10, 4, 3, 2, 5, 9, 8, 6, 0, 7, 1]
         else:
             # Greedy
             self.priority = [4, 3, 2, 0, 10, 5, 9, 8, 7, 6, 1]
