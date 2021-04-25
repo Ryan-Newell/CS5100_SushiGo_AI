@@ -14,12 +14,12 @@ import json
 state = State(get_actual_card_pool())
 def rungame():
     # p1 = RulePlayer('Player 2', 'plus')
-    # p2 = RulePlayer('Player 2', 'plus')
+    p2 = RulePlayer('Player 2')
     # p1.model_dict = json.loads(open('./models/model1.json').read())
     # p2 = RandomPlayer('Player 2')
     p1 = MinimaxPlayer.MinimaxPlayer('Player 1', False)
     # p2 = RandomPlayer('Player 2')
-    p2 = HumanPlayer('Player1')
+    # p2 = HumanPlayer('Player1')
 
     state.add_player(p1)
     state.add_player(p2)
@@ -28,7 +28,7 @@ def rungame():
     all_results = []
     hit_rates = []
 
-    state.play_games(10, output_result=True)
+    state.play_games(1000, output_result=False)
 
 # state.play_games(num_of_games=1000000, round_per_game=3, output_result=True)
 # all_results.append(state.stats)

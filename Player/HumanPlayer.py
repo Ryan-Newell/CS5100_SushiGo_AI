@@ -11,6 +11,7 @@ class HumanPlayer(BasePlayer):
 
     def draw(self, card):
         self.hand.append(card)
+        self.prevBoard = [0] * len(CARD_ON_BOARD)
 
     def pick_a_card(self, all_player_boards):
         action = None
