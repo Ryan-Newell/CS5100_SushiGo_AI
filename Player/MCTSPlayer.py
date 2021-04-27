@@ -17,7 +17,7 @@ class MCTSPlayer(BasePlayer):
         self.prepare_for_next_round()
 
     def pick_a_card(self, all_player_boards):
-        action = None  # represents the best next move
+        action = None # represents the best next move
         index = 0
         # Loop through all the players and for each, run mcts
         for player, board in all_player_boards:
@@ -25,6 +25,7 @@ class MCTSPlayer(BasePlayer):
             nextPlayerInfo = None
             if index < len(all_player_boards) - 1:
                 nextPlayerInfo = all_player_boards[index + 1]
+
             # Run MCTS
             node = self.run_mcts(player, board, nextPlayerInfo, self.num_simulations)
 
@@ -40,15 +41,16 @@ class MCTSPlayer(BasePlayer):
         root_node = Node(player)
 
         # Loop through all the moves of the current player
-        for player_move in player.hand:
+
+        for player_move in set(player.hand):
 
             node = self.select_promising_node(root_node)
-
+            
             self.expand_node(node, nextPlayerInfo, player_move)
-
+            
             node_to_explore = node
 
-            if len(node.children) > 0:
+            if(len(node.children) > 0):
                 node_to_explore = node.find_random_child()
 
             playout_result = self.simulate(node_to_explore, num_simulations)
@@ -56,10 +58,11 @@ class MCTSPlayer(BasePlayer):
             self.back_propogate(node_to_explore, playout_result)
 
         return root_node
+    
 
     def select_promising_node(self, node):
-        if node.is_fully_expanded():
-            node = self.uct_select_best_child(node)
+        if node.is_fully_expanded() :
+            node = self.uct_select_best_child(node);
         return node
 
     def expand_node(self, node, nextPlayerInfo, player_move):
@@ -96,14 +99,16 @@ class MCTSPlayer(BasePlayer):
 
 class Node:
     def __init__(self, player, incoming_move=None, parent=None):
-        self.visits = 1
+
+        self.visits=1
         self.reward = 0.0
         self.parent = parent
         self.children = []
         self.player = player
         self.incoming_move = incoming_move
 
-    def update(self, reward):
+
+    def update(self,reward):
         self.reward += reward
         self.visits += 1
 
@@ -125,5 +130,7 @@ class Node:
         return max(node.reward for node in self.children)
 
     def __repr__(self):
-        s = "Node; children: %d; visits: %d; reward: %f" % (len(self.children), self.visits, self.reward)
+
+        s="Node; children: %d; visits: %d; reward: %f"%(len(self.children),self.visits,self.reward)
+
         return s
