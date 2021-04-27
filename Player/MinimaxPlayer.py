@@ -25,7 +25,7 @@ class MinimaxPlayer(BasePlayer):
             self.greedy_num = 9
             self.solve_tree = 6
         else:
-            self.greedy_num = 6
+            self.greedy_num = 9
 
     def draw(self, card):
         self.hand.append(card)
@@ -65,20 +65,28 @@ class MinimaxPlayer(BasePlayer):
             self.hand.remove(action)
             self.opponentHand = self.hand.copy()
             add_a_card_to_board(self.board, action)
-        # if len(self.hand) == 0:
-        #     print(self.rewards)
-        #     winnable = False
-        #     prev = -1000
-        #     for reward in self.rewards:
-        #         if reward > 0:
-        #             winnable = True
-        #
-        #         if reward < prev:
-        #             print("miss estimate")
-        #         prev = reward
-        #     if winnable and self.rewards[-1] <= 0:
-        #         print("ALERT")
-            #     prev = reward
+        if len(self.hand) == 0:
+            print(self.rewards)
+            autowin = False
+            if self.rewards[0] > 0:
+                autowin = True
+            winnable = False
+            prev = -1000
+            for reward in self.rewards:
+                if reward > 0:
+                    winnable = True
+
+                if reward < prev:
+                    print("miss estimate")
+                prev = reward
+            if winnable and self.rewards[-1] <= 0:
+                print("ALERT")
+            if not autowin:
+                # print("badstart")
+                if self.rewards[-1] > 0:
+                    pass
+                    # print("comeback")
+        #     #     prev = reward
         return
 
     def get_score(self):
@@ -196,6 +204,7 @@ class MinimaxPlayer(BasePlayer):
             # beta pruning
             alpha = max(max(rewards), alpha)
             if max(rewards) > beta:
+                alpha = max(rewards)
                 break
         # print("hands")
         # print(player_hand)

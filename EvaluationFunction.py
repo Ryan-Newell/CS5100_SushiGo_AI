@@ -48,13 +48,39 @@ class EvaluationFunction:
 
         if card_number == 4:  # wasabi
             nigiri_in_game = cards_in_game.count(1) + cards_in_game.count(2) + cards_in_game.count(3)
-            wasabi_with_player = player_board[7]
-            return nigiri_in_game - wasabi_with_player  # wasabi is scored only if there are nigiri cards in the game
+            if nigiri_in_game == 0:
+                return 0
+            if 3 in opponent_hand:
+                return 4.5
+            elif player_hand.count(3) > 1:
+                return 4.5
+            elif 2 in opponent_hand:
+                return 3
+            elif player_hand.count(2) > 1:
+                return 3
+            elif 1 in opponent_hand:
+                return 1.5
+            elif player_hand.count(1) > 1:
+                return 1.5
+            else:
+                return 0
+            # wasabi_with_player = player_board[7]
+            # return nigiri_in_game - wasabi_with_player  # wasabi is scored only if there are nigiri cards in the game
 
         if card_number == 5:  # tempura
             tempura_with_player = player_board[8]
-
+            tempura_with_opponent = opponent_board[8]
             tempura_in_game = cards_in_game.count(5)
+            if tempura_with_player == 1:
+                return 2.5
+            if tempura_with_player % 2 == 0 and tempura_with_opponent % 2 == 0:
+                if tempura_in_game < 2:
+                    return 0
+                if player_hand.count(5) == 1 and opponent_hand.count(5) == 1:
+                    return 2.5
+
+            # if player_hand.count(5
+
             if tempura_with_player + tempura_in_game > 2:
                 possible_future_deck = player_board.copy()
                 possible_future_deck[8] += 1
