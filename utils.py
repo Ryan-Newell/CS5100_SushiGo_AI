@@ -40,6 +40,12 @@ CARDS = {
     11: 'Chopsticks',  # Not implemented
 }
 
+# hand = [8, 3, 4, 2]
+# op_hand = [7,3,3,3]
+# cardsingame = [8, 3, 4, 2, 7,3,3,3]
+# hands =  [5,5,5]
+# board = [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0]
+
 
 def get_score(board):
     score = 0

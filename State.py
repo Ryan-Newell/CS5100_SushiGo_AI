@@ -21,6 +21,14 @@ class State:
                 if not self.deterministic:
                     random.shuffle(self.card_pool)
                 p.draw(self.card_pool.pop())
+        # self.players[0].draw(2)
+        # self.players[0].draw(1)
+        # self.players[0].draw(4)
+        # self.players[0].draw(7)
+        # self.players[1].draw(0)
+        # self.players[1].draw(6)
+        # self.players[1].draw(0)
+        # self.players[1].draw(6)
 
     def play(self, num_of_rounds=1, output_result=False):
         self.scoreboard = [0] * len(self.players)
@@ -56,6 +64,7 @@ class State:
             #     print("Player", i)
             #     for i in range(len(p.board)):
             #         print(f"{CARD_ON_BOARD[i]} X {p.board[i]}")
+            # print(all_player_boards)
             print(self.scoreboard, max_score)
             # print(self.players)
             # if self.scoreboard[1] > self.scoreboard[0]:
