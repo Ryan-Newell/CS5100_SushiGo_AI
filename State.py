@@ -62,7 +62,7 @@ class State:
             #     print("WIN")
 
         for i, p in enumerate(self.players):
-            if self.scoreboard[i] == max_score:
+            if self.scoreboard[i] == max_score and self.scoreboard.count(max_score) == 1:
                 # print(max_score)
                 self.stats[i] += 1
                 p.feed_reward(max(1, len(self.players) - 1))  # If there are more than one opponent, put more reward for a win
