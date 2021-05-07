@@ -9,6 +9,13 @@ from scipy.stats import rankdata
 # Different in rules: Multiple Wasabi can act on a single sushi
 # No tie breaker
 
+"""
+The values for the indices of a board object. A board is a size 12 array, with each index representing the number of
+cards. Note that 10 represents the total maki roll count, so 1 maki and 3 maki would make board[9] = 4. Also, adding
+a Nigiri to a wasabi board removes a wasabi at index 7 and adds one on 4, 5, 6.
+EX: board = [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 4, 0, 0] means the board has: 1 sashimi, 1 wasabi salmon, 1 wasabi and
+4 maki rolls
+"""
 CARD_ON_BOARD = {
     0: 'Sashimi',
     1: 'Egg Nigiri',
@@ -25,6 +32,10 @@ CARD_ON_BOARD = {
     12: 'Chopsticks',
 }
 
+"""
+The values of each card. a hand is a list of cards.
+EX: hand = [7, 3, 3, 3] means [1 Maki, Squid Nigiri, Squid Nigiri, Squid Nigiri]
+"""
 CARDS = {
     0: 'Sashimi',
     1: 'Egg Nigiri',
@@ -36,18 +47,18 @@ CARDS = {
     7: '1 Maki',
     8: '2 Maki',
     9: '3 Maki',
-    10: 'Pudding',  # Not implemented
+    10: 'Pudding',
     11: 'Chopsticks',  # Not implemented
 }
 
-# hand = [8, 3, 4, 2]
-# op_hand = [7,3,3,3]
-# cardsingame = [8, 3, 4, 2, 7,3,3,3]
-# hands =  [5,5,5]
-# board = [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0]
-
 
 def get_score(board):
+    """
+    Gets the score of a board. DOES NOT INCLUDE MAKI OR PUDDING.
+    get_maki_score and get_pudding_score is needed for that
+    :param board: the board to be scored (excludes maki, pudding)
+    :return: the score of the board sans maki, pudding
+    """
     score = 0
     score += board[0] // 3 * 10  # Salmon Nigiri
     score += board[1] * 1  # Sashimi
@@ -72,6 +83,12 @@ def get_score(board):
 
 
 def add_a_card_to_board(board, card):
+    """
+    Adds the provided card to the board object
+    :param board: a board object to be modified
+    :param card: the card to be added to board
+    :return: None. The board is mutated
+    """
     if card == 0:
         board[0] += 1
     if card in [1, 2, 3]:
@@ -98,6 +115,11 @@ def add_a_card_to_board(board, card):
 
 
 def get_maki_score(maki_cnt_list):
+    """
+    Scores maki rolls for a game
+    :param maki_cnt_list: An array of the number of maki rolls each player has. [1, 2] means p1 has 1, p2 has 2.
+    :return: an array of scores for the player
+    """
     maki_rank = rankdata([_*-1 for _ in maki_cnt_list], method='min')
     maki_score = []
     first_count = np.sum(maki_rank == 1)
@@ -113,6 +135,11 @@ def get_maki_score(maki_cnt_list):
 
 
 def get_pudding_score(pudding_cnt_list):
+    """
+    Scores pudding for a game
+    :param pudding_cnt_list: An array of the number of puddings each player has. [1, 2] means p1 has 1, p2 has 2.
+    :return: an array of scores for the player
+    """
     pudding_rank = rankdata([_*-1 for _ in pudding_cnt_list], method='min')
     pudding_score = []
     lowest_rank = max(pudding_rank)
@@ -126,7 +153,6 @@ def get_pudding_score(pudding_cnt_list):
         else:
             pudding_score.append(0)
     return pudding_score
-
 
 
 def score_game(boards):
@@ -148,14 +174,13 @@ def score_game(boards):
     return scores
 
 
-
-
 def translate_board(board):
     board_list = ast.literal_eval(board)
     res = []
     for i, count in enumerate(board_list):
         res.append(f'{CARDS[i]} X {count}')
     return '  '.join(res)
+
 
 def convert_hand_to_counter(hand):
     counter = Counter(hand)
@@ -164,7 +189,13 @@ def convert_hand_to_counter(hand):
         res[i] = counter[i]
     return res
 
+
 def get_actual_card_pool():
+    """
+    Creates the card pool from which cards are drawn. Has the same structure as a hand. Types of cards can be removed
+    from the pool by commenting out the line where they are added.
+    :return: The card pool, a list of cards
+    """
     card_pool = []
     card_pool.extend([0] * 14)
     card_pool.extend([1] * 5)

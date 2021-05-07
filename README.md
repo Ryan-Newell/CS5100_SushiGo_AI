@@ -2,7 +2,7 @@
 
 - Original Sushi Go code from https://github.com/Gravellent/sushigo-rl
 - game.py runs games. Currently, change players in code p1 and p2.
-- DeepPlayer, HumanPlayer, QPlayer, RandomPlayer and RulePlayer are all from Martin Liu.
+- DeepPlayer, HumanPlayer, Qplayer and RandomPlayer and RulePlayer are all from Martin Liu.
 
 
 # SushiGo RL 

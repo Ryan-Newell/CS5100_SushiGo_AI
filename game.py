@@ -12,33 +12,32 @@ import plotly.express as px
 from tqdm import tqdm
 import json
 
-#%%
-
 state = State(get_actual_card_pool())
 state2 = State(get_actual_card_pool())
+
+
 def rungame():
     # p2 = RulePlayer('Player 1', 'plus')
-    p1 = RulePlayer('Player 2', 'plus')
+    # p1 = RulePlayer('Player 2', 'plus')
     # p2 = QPlayer('Player 2', learning_rate=0.6, discount_factor=0.9)
-    p2 = ApproxQPlayer.ApproxQPlayer('Player 2')
-    # p2 = RandomPlayer('Player 2')
+    # p2 = ApproxQPlayer.ApproxQPlayer('Player 2')
+    p2 = RandomPlayer('Player 2')
     # p1.model_dict = json.loads(open('./models/model1.json').read())
     # p2 = RandomPlayer('Player 2')
     # p1 = MinimaxPlayer.MinimaxPlayer('Player 1')
-    # p1 = MCTSPlayer.MCTSPlayer('Player 1', 300000)
+    p1 = MCTSPlayer.MCTSPlayer('Player 1', 300000000)
     # p2 = RandomPlayer('Player 2')
-    p3 = HumanPlayer('Player1')
+    # p3 = HumanPlayer('Player1')
     # p3 = HumanPlayer('Player1')
     state.add_player(p1)
     state.add_player(p2)
 
+    state.play_games(100, output_result=False)
 
-    state.play_games(5000, output_result=False)
-
-    state2.add_player(p2)
-    state2.add_player(p3)
-    print("ready to rumble!")
-    state2.play_games(5, output_result=True)
+    # state2.add_player(p2)
+    # state2.add_player(p3)
+    # print("ready to rumble!")
+    # state2.play_games(5, output_result=True)
 #
 #
 #
@@ -71,31 +70,7 @@ def rungame():
 #     [[x[i], y[i]]] = all_results
 #
 # print(x, y)
-# print(sum(x)/len(x), sum(y)/len(y))
-
-
-
-
-
-# def rungame():
-#     # p1 = RulePlayer('Player 2', 'plus')
-#     p2 = RulePlayer('Player 2')
-#     # p1.model_dict = json.loads(open('./models/model1.json').read())
-#     # p2 = RandomPlayer('Player 2')
-#     p1 = MinimaxPlayer.MinimaxPlayer('Player 1', False)
-#     # p2 = RandomPlayer('Player 2')
-#     # p2 = HumanPlayer('Player1')
-#
-#     state.add_player(p1)
-#     state.add_player(p2)
-#
-#     df = pd.DataFrame()
-#     all_results = []
-#     hit_rates = []
-#
-#     state.play_games(1000, output_result=False)
-
-
+# print(sum(x)/len(x), sum(y)/len(y))=
 
 # def manualscore(cards1, cards2):
 #     board1 = [0] * len(CARD_ON_BOARD)

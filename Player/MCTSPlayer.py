@@ -100,7 +100,7 @@ class MCTSPlayer(BasePlayer):
 class Node:
     def __init__(self, player, incoming_move=None, parent=None):
 
-        self.visits=1
+        self.visits= 1
         self.reward = 0.0
         self.parent = parent
         self.children = []
